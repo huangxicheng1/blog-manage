@@ -12,6 +12,8 @@
 整个插件**不需要本地 git**，也**永远不会写 `entries.js`** —— 那个文件由 `build.py`
 在 Actions 里生成，插件只负责 `content/` 下的 Markdown。
 
+![博客管理：左栏按标签分组、编辑分屏与实时预览](docs/screenshot-editor.png)
+
 ---
 
 ## 1. 功能需求
@@ -367,6 +369,8 @@ blog-manage/
 ├── icon.svg               插件图标
 ├── cordis.patch.yml       bundle patch
 ├── .github/workflows/     CI：语法检查 + 三个测试套件
+├── screenshots.json       市场详情页的截图清单（相对路径，1-8 张）
+├── docs/                  README 与市场共用的截图
 ├── LICENSE                MIT
 └── test/                  无依赖验证脚本（见第 8 节）
 ```
