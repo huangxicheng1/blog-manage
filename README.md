@@ -12,6 +12,10 @@
 整个插件**不需要本地 git**，也**永远不会写 `entries.js`** —— 那个文件由 `build.py`
 在 Actions 里生成，插件只负责 `content/` 下的 Markdown。
 
+> **前提**：站点的 Pages 源必须设成 **GitHub Actions**（Settings → Pages → Source）。
+> 如果还停在「Deploy from a branch」，GitHub 会自己把分支内容原样发布一遍，覆盖掉
+> Actions 的产物，于是构建明明成功、线上却没有新文章。详见第 10 节。
+
 ![博客管理：左栏按标签分组、编辑分屏与实时预览](docs/screenshot-editor.png)
 
 ---
@@ -395,6 +399,10 @@ blog-manage/
 ## 10. 已知边界
 
 - **只看不写 `entries.js`**：符合约定，构建交给 Actions。
+- **站点必须是「Pages 源 = GitHub Actions」**。若仓库仍是从分支部署（`build_type: legacy`），
+  GitHub 会把分支内容原样发布一遍、覆盖 Actions 产物，`entries.js` 必须由工作流提交回仓库
+  才生效——那一来「插件不写 `entries.js`」的前提就不成立了。排查方法是看线上
+  `entries.js` 的字节数是否等于仓库里被提交的那一份：相等就说明它在用旧文件。
 - **一篇文章在左栏出现多次**是 tag 视图的预期结果，不是重复 bug。
 - **不支持改名**：改文章路径 = 删除 + 新建，这样 Git 历史里是一次明确的删与建。
 - **Actions 状态是轮询**（6 秒首查，之后 15 秒一次，最多约 10 分钟），不是 webhook。
