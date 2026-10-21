@@ -4,6 +4,14 @@
   "description": "Manage a GitHub Pages blog from inside DeepSeek Harness: browse, edit and publish content/*.md over the GitHub REST API.",
   "license": "MIT",
   "author": "huangxicheng1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/huangxicheng1/blog-manage.git"
+  },
+  "homepage": "https://github.com/huangxicheng1/blog-manage#readme",
+  "bugs": {
+    "url": "https://github.com/huangxicheng1/blog-manage/issues"
+  },
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -27,7 +35,8 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=18",
+    "dsh": ">=0.2.1-rc.2"
   },
   "keywords": [
     "deepseek-harness",
