@@ -343,7 +343,7 @@ window.dispatchEvent(
 
 ```bash
 node test/tag-groups.mjs    # 17 项：tag 分组、多 tag 归属、无标签组、顺序、搜索字段、折叠记忆读取
-node test/run.mjs           # 45 项：front matter 一致性、GitHub 客户端（重试/超时/冲突）、发布守卫
+node test/run.mjs           # 49 项：front matter 一致性、GitHub 客户端（重试/超时/冲突/权限错误映射）、发布守卫
 node test/host-routes.mjs   # 14 项：10 条路由注册、设置持久化、自动化契约、端到端发布
 ```
 

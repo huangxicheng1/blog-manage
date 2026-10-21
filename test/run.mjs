@@ -448,6 +448,110 @@ await testAsync('client: 401 maps to unauthorized with actionable text', async (
   )
 })
 
+/**
+ * A client whose reads succeed and whose first write returns a chosen 403.
+ * This is the shape of the real failure: a fine-grained PAT with Contents: Read
+ * reads the article list happily, then dies on `POST /git/blobs`.
+ */
+function makeWriteForbiddenClient(apiMessage) {
+  const reply = (status, body, headers = new Map()) => ({
+    ok: status >= 200 && status < 300,
+    status,
+    headers,
+    text: async () => JSON.stringify(body),
+  })
+  return createGitHubClient({
+    token: 't',
+    repository: 'o/r',
+    branch: 'main',
+    apiBase: 'https://api.test',
+    attempts: 1,
+    logger: { warn() {} },
+    fetchImpl: async (url, init = {}) => {
+      const method = (init.method ?? 'GET').toUpperCase()
+      const path = new URL(url).pathname
+      if (method !== 'GET') return reply(403, { message: apiMessage })
+      if (path.includes('/git/ref/')) return reply(200, { object: { sha: 'head1' } })
+      if (path.includes('/git/commits/')) return reply(200, { sha: 'head1', tree: { sha: 'tree1' } })
+      return reply(404, { message: 'Not Found' })
+    },
+  })
+}
+
+await testAsync('client: a write 403 on a fine-grained token names the permission to fix', async () => {
+  const client = makeWriteForbiddenClient('Resource not accessible by personal access token')
+  await assert.rejects(
+    () => client.commitChanges({ changes: [{ path: 'content/notes/a.md', text: 'x' }], message: 'm' }),
+    (error) => {
+      assert.equal(error.code, 'token-missing-write')
+      assert.ok(error.message.includes('Read and write'), 'the message must name the permission')
+      assert.ok(error.message.includes('Contents'), 'the message must name the permission group')
+      assert.ok(!error.message.includes('Resource not accessible'), 'the opaque phrase is not helpful')
+      assert.equal(error.details.method, 'POST')
+      return true
+    },
+  )
+})
+
+await testAsync('client: a write 403 on a classic token points at the repo scope', async () => {
+  const client = makeWriteForbiddenClient('Must have push access to repository')
+  await assert.rejects(
+    () => client.commitChanges({ changes: [{ path: 'content/notes/a.md', text: 'x' }], message: 'm' }),
+    (error) => {
+      assert.equal(error.code, 'token-missing-write')
+      assert.ok(error.message.includes('classic'))
+      assert.ok(error.message.includes('repo'))
+      return true
+    },
+  )
+})
+
+await testAsync('client: a read 403 is a different code and a different hint', async () => {
+  const client = createGitHubClient({
+    token: 't',
+    repository: 'o/r',
+    branch: 'main',
+    apiBase: 'https://api.test',
+    attempts: 1,
+    logger: { warn() {} },
+    fetchImpl: async () => ({
+      ok: false,
+      status: 403,
+      headers: new Map(),
+      text: async () => JSON.stringify({ message: 'Resource not accessible by personal access token' }),
+    }),
+  })
+  await assert.rejects(
+    () => client.getBranchHead(),
+    (error) => {
+      assert.equal(error.code, 'forbidden')
+      assert.ok(error.message.includes('Repository access'), 'a read failure must point at repository access')
+      return true
+    },
+  )
+})
+
+await testAsync('client: an exhausted rate limit outranks the permission message', async () => {
+  const client = createGitHubClient({
+    token: 't',
+    repository: 'o/r',
+    branch: 'main',
+    apiBase: 'https://api.test',
+    attempts: 1,
+    logger: { warn() {} },
+    fetchImpl: async () => ({
+      ok: false,
+      status: 403,
+      headers: new Map([['x-ratelimit-remaining', '0']]),
+      text: async () => JSON.stringify({ message: 'API rate limit exceeded' }),
+    }),
+  })
+  await assert.rejects(
+    () => client.getBranchHead(),
+    (error) => error.code === 'rate-limited',
+  )
+})
+
 await testAsync('client: a missing file reads as null rather than throwing', async () => {
   const stub = createStubGitHub({ files: {} })
   const client = makeClient(stub)
