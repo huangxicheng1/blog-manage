@@ -1,0 +1,50 @@
+{
+  "name": "dsh-hxc-blog",
+  "version": "0.1.0",
+  "description": "Manage a GitHub Pages blog from inside DeepSeek Harness: browse, edit and publish content/*.md over the GitHub REST API.",
+  "license": "MIT",
+  "author": "huangxicheng1",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "lib/blog-service.js",
+    "lib/content-store.js",
+    "lib/github-client.js",
+    "lib/settings-store.js",
+    "lib/automation.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "github-pages",
+    "blog",
+    "markdown"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  }
+}

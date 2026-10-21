@@ -1,0 +1,19 @@
+# Bundle patch layer.
+#
+# One row loads `index.js` as the Host half (the plugin that owns the GitHub
+# credentials, the /api/gh-blog routes and the automation entry point). The
+# package's `dsh.client` declaration additionally makes the Web app load
+# `client.js` as the browser half, which registers the sidebar entry and the
+# main-panel page.
+#
+# The `config` block below is entirely optional: every key mirrors the plugin's
+# settings panel, so an operator can pin defaults for a machine without opening
+# the UI. Settings saved from the panel win over these values.
+- insert:
+    - id: gh-blog
+      name: dsh-hxc-blog
+      config:
+        repository: huangxicheng1/huangxicheng1.github.io
+        branch: main
+        contentRoot: content
+        siteUrl: https://huangxicheng1.github.io/

@@ -1,0 +1,12 @@
+# Dependencies (this plugin has none, but a linked install can drop these here)
+node_modules/
+
+# Local noise
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Plugin runtime state never belongs in the repository: the GitHub token lives in
+# the DSH credential store and the preferences in $DSH_HOME/gh-blog/settings.json.
+settings.json

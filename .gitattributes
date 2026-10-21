@@ -1,0 +1,7 @@
+# Normalise line endings so the Host and Client halves behave the same on every OS.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.webp binary
+*.gif binary

@@ -1,0 +1,35 @@
+name: tests
+
+# The plugin has zero runtime dependencies, so CI is just "check the syntax and
+# run the three suites". That keeps the red/green signal honest: nothing here can
+# pass because an install step happened to work.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax check
+        run: |
+          node --check index.js
+          node --check client.js
+          for file in lib/*.js; do node --check "$file"; done
+
+      - name: Front matter, GitHub client and publish guards
+        run: node test/run.mjs
+
+      - name: Tag grouping, search and fold memory
+        run: node test/tag-groups.mjs
+
+      - name: Host routes and end-to-end publish
+        run: node test/host-routes.mjs
