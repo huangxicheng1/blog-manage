@@ -94,6 +94,15 @@ HTTP 路由、Host 服务、浏览器事件三个入口，见第 7 节。
 这是一个 DSH bundle 包，用 `plugin_manager` 的 `install_bundle` 安装。
 **不要**在 profile 目录里手写 `package.json`，也不要在那里跑 pnpm —— `install_bundle` 会做完这些。
 
+### 从 npm 安装（最省事）
+
+```
+plugin_manager  action: install_bundle  target: dsh-hxc-blog
+```
+
+包在 npm 官方源上：<https://www.npmjs.com/package/dsh-hxc-blog>。
+当前版本 `0.1.0`，声明兼容 DSH `>=0.2.1-rc.2`。
+
 ### 从 GitHub 安装
 
 ```bash
@@ -107,6 +116,7 @@ plugin_manager  action: install_bundle  target: <clone 目录的绝对路径>
 ```
 
 `install_bundle` 的 `target` 要的是本机路径，所以先 clone 再指过去，不要直接填 URL。
+如果你只是想让 DSH 去拉这个仓库，`dsh plugin add github:huangxicheng1/blog-manage` 也可以。
 
 ### 从本地工作目录安装
 
