@@ -107,7 +107,7 @@ plugin_manager  action: install_bundle  target: dsh-hxc-blog
 ```
 
 包在 npm 官方源上：<https://www.npmjs.com/package/dsh-hxc-blog>。
-当前版本 `0.1.0`，声明兼容 DSH `>=0.2.1-rc.2`。
+当前版本 `0.1.1`，声明兼容 DSH `>=0.2.1-rc.2`。
 
 ### 从 GitHub 安装
 

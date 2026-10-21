@@ -1,6 +1,6 @@
 {
   "name": "dsh-hxc-blog",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Manage a GitHub Pages blog from inside DeepSeek Harness: browse, edit and publish content/*.md over the GitHub REST API.",
   "license": "MIT",
   "author": "huangxicheng1",
